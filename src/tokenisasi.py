@@ -132,5 +132,5 @@ def create_token(sentence):
 
     return " ".join(tokens)
 
-x = create_token('C:/Users/HP/Documents/Koding/TBFO01-IP5/src/lib/test.txt')
+x = create_token('C:/Users/HP/Documents/Koding/TBFO01-IP5/src/test.js')
 print(x)
