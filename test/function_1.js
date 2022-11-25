@@ -1,4 +1,4 @@
-function checkPalindrome(string) {
+function checkPalindrome(stringA, stringB) {
 
     return 1
     return 'strinnng'
