@@ -45,14 +45,17 @@ tokenData = [
     (r'<',                      "L"),
     (r'>=',                     "GEQ"),
     (r'>',                      "G"),
-    (r'!=',                     "NEQ"),
-    (r'\==',                    "ISEQ"),
-    (r'\=(?!\=)',               "EQ"),
+    (r'!(?!\=)(?!\=)',                     "NOT"),
+    (r'\!=(?!\=)',                     "NEQ"),
+    (r'\!\==',                     "NEQEQ"),
+    (r'\==(?!\=)',                    "ISEQ"),
+    (r'\=\==',                    "ISEQEQ"),
+    (r'(?!\!)\=(?!\=)(?!\=)',               "EQ"),
 
     # Keyword
     (r'\bformat\b',             "FORMAT"),
-    (r'\b&&\b',                 "AND"),
-    (r'\b\|\|\b',               "OR"),
+    (r'&&',                 "AND"),
+    (r'\|\|',               "OR"),
     (r'\b!\b',                  "NOT"),
     (r'\bif\b',                 "IF"),
     (r'\belse\b',               "ELSE"),
@@ -128,4 +131,9 @@ def create_token(sentence):
 
     tokens = " ".join(lexer(char,tokenData))
 
+    if len(tokens) != 0:
+        tokens += ' '
+    tokens += 'EOF'
+
+    print(tokens)
     return tokens
