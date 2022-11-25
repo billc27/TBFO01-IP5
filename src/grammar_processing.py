@@ -4,15 +4,18 @@ def read_grammar(nama_file):
 
     baris = file.readline()
     while baris != "":
-        # head, body = baris.replace("\n", "").split(" -> ")
-        head, *tail = baris.replace("\n", "").split(" -> ")
+        if (baris.startswith('##')):    # ignore comments
+            pass
+        else:
+            # head, body = baris.replace("\n", "").split(" -> ")
+            head, *tail = baris.replace("\n", "").split(" -> ")
 
-        if(len(tail) != 0):
-            body = tail[0]
-            if head not in cfg.keys():
-                cfg[head] = [body.split(" ")]
-            else:
-                cfg[head].append(body.split(" "))
+            if(len(tail) != 0):
+                body = tail[0]
+                if head not in cfg.keys():
+                    cfg[head] = [body.split(" ")]
+                else:
+                    cfg[head].append(body.split(" "))
 
         baris = file.readline()
 
