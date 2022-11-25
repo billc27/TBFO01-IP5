@@ -1,3 +1,5 @@
+DEBUG = False
+
 def read_grammar(nama_file):
     file = open(nama_file, "r")
     cfg = {}
@@ -20,56 +22,88 @@ def read_grammar(nama_file):
         baris = file.readline()
 
     file.close()
-    print(cfg)
-    # return cfg
+
+    if DEBUG is True:
+        print(cfg)
+    
+    return cfg
 
 def is_terminal(string):
     list_of_terminal = [
-        "LCB",
-        "LSB",
+        "STRING",
+        "NUM",
+        "NEWLINE",
         "LRB",
-        "RCB",
-        "RSB",
         "RRB",
+        "LSB",
+        "LCB",
+        "RCB",
+        "SEMICOLON",
+        "COLON",
+        "POWEQ",
+        "POW",
+        "MULEQ",
+        "DIVEQ",
+        "SUMEQ",
+        "SUMAS NUM",
+        "SUBEQ",
+        "MODEQ",
+        "ARROW",
         "ADD",
         "SUB",
         "MUL",
         "DIV",
-        "POW",
         "MOD",
-        "EQ",
-        "ADDEQ",
-        "SUBEQ",
-        "MULEQ",
-        "DIVEQ",
-        "POWEQ",
-        "MODEQ",
-        "E",
-        "EE",
-        "NE",
-        "NEE",
+        "LEQ",
         "L",
-        "LE",
+        "GEQ",
         "G",
-        "GE",
-        "QUESTION",
+        "NEQ",
+        "ISEQ",
+        "EQ",
+        "FORMAT",
         "AND",
         "OR",
-        "ANDBIT",
-        "ORBIT",
-        "XORBIT",
-        "SAL",
-        "SAR",
-        "SHR",
+        "NOT",
+        "IF",
+        "ELSE",
+        "FOR",
+        "WHILE",
+        "DO",
         "BREAK",
+        "SWITCH",
+        "CASE",
+        "DEFAULT",
         "CONTINUE",
+        "FALSE",
+        "TRUE",
+        "NONE",
+        "IN",
+        "CLASS",
         "RETURN",
-        "SEMICOLON",
-        "COLON",
+        "IMPORT",
+        "RAISE",
+        "WITH",
+        "AS",
+        "TYPE",
+        "TRY",
+        "CATCH",
+        "THROW",
+        "FINALLY",
+        "FUNCTION",
+        "ID",
+        "KARTITIK",
+        "MULTILINE",
+        "ERR",
+        "TITIK",
+        "DELETE",
+        "COMMA",
+        "THIS",
+        "CONSTRUCTOR",
     ]
     return string in list_of_terminal
 
 def is_variables(string):
     return not is_terminal(string)
 
-read_grammar("CFG.txt")
+# read_grammar("CFG.txt")
