@@ -21,12 +21,14 @@ def comparer(text, tokenData):
             isMatch = reg.match(text, pos)
 
             if isMatch:
-                tokens.append(code)
+                if code:
+                    tokens.append(code)
                 break
         
         if isMatch:
             pos = isMatch.end(0)
         else:
+            print(text[pos])
             print("Error")
             break
 
@@ -39,6 +41,12 @@ def tokenGenerator(tesFile):
 
     print(char)
 
-    tokens = comparer(char,token.tokenData)
+    tokens = " ".join(comparer(char,token.tokenData))
+
+    if len(tokens) != 0:
+        tokens += ' '
+    tokens += 'EOF'
+    print(tokens)
+
 
     return tokens
