@@ -95,9 +95,9 @@ tokenData = [
 ]
 
 def lexer(stringInput, token_exp):
-    pos = 0 # posisi karakter pada seluruh potongan stringInput (absolut)
-    cur = 1 # posisi karakter relatif terhadap baris tempat dia berada
-    line = 1 # posisi baris saat ini
+    pos = 0
+    cur = 1 # character position relative to row
+    line = 1 # current row position
     tokens = []
     while pos < len(stringInput):
         if stringInput[pos] == '\n':
@@ -108,13 +108,13 @@ def lexer(stringInput, token_exp):
         for t in token_exp:
             pattern, tag = t
             regex = re.compile(pattern)
-            isMatch = regex.match(stringInput, pos)
-            if isMatch:
+            match = regex.match(stringInput, pos)
+            if match:
                 if tag:
                     token = tag
                     tokens.append(token)
                 break
-            
+
         pos = match.end(0)
         cur += 1
     return tokens
