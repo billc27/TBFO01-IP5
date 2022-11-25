@@ -1,10 +1,9 @@
 import re
-import sys
 
 tokenData = [
-    (r'[ \t]+',                 None),
-    (r'\/\/[^\n]*',                None),
-    (r'\/\*[^*/]*\*\/',                None),
+    (r'[ \t]+',                                      None),
+    (r'\/\/[^\n]*',                                  None),
+    (r'\/\*[^*/]*\*\/',                              None),
     (r'[\n]+[ \t]*\'\'\'[(?!(\'\'\'))\w\W]*\'\'\'',  None),
     (r'[\n]+[ \t]*\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"',  None),
 
@@ -17,24 +16,25 @@ tokenData = [
 
     # Delimiter
     (r'\n',                     "NEWLINE"),
-    (r'\(',                     "KLKI"), 
-    (r'\)',                     "KLKA"),
-    (r'\[',                     "KSKI"), 
-    (r'\]',                     "KSKA"),
-    (r'\{',                     "KKKI"),
-    (r'\}',                     "KKKA"),
-    (r'\;',                     "TITIKKOMA"), 
-    (r'\:',                     "TITIKDUA"),
+    (r'\(',                     "LRB"), 
+    (r'\)',                     "RRB"),
+    (r'\[',                     "LSB"), 
+    (r'\]',                     "RSB"),
+    (r'\{',                     "LCB"),
+    (r'\}',                     "RCB"),
+    (r'\;',                     "SEMICOLON"), 
+    (r'\:',                     "COLON"),
 
     # Operator
-    (r'\*\*=',                   "POWAS"),
-    (r'\*\*',                    "POW"),
-    (r'\*=',                    "MULAS"),
-    (r'/=',                     "DIVAS"),
-    (r'\+=',                    "SUMAS"),
-    (r'\++',                    "SUMAS NUM"),
-    (r'\-=',                     "SUBAS"),
-    (r'\%=',                     "MODAS"),
+    (r'\*\*=',                  "POWEQ"),
+    (r'\*\*',                   "POW"),
+    (r'\*=',                    "MULEQ"),
+    (r'/=',                     "DIVEQ"),
+    (r'\+=',                    "SUMEQ"),
+    (r'\++',                    "SUMEQ NUM"),
+    (r'\--',                    "SUBEQ NUM"),
+    (r'\-=',                    "SUBEQ"),
+    (r'\%=',                    "MODEQ"),
     (r'\=>',                    "ARROW"),
     (r'\+',                     "ADD"),
     (r'\-',                     "SUB"),
@@ -51,17 +51,21 @@ tokenData = [
 
     # Keyword
     (r'\bformat\b',             "FORMAT"),
-    (r'\b&&\b',                "AND"),
-    (r'\b\|\|\b',                 "OR"),
-    (r'\b!\b',                "NOT"),
+    (r'\b&&\b',                 "AND"),
+    (r'\b\|\|\b',               "OR"),
+    (r'\b!\b',                  "NOT"),
     (r'\bif\b',                 "IF"),
     (r'\belse\b',               "ELSE"),
     (r'\bfor\b',                "FOR"),
     (r'\bwhile\b',              "WHILE"),
+    (r'\bdo\b',                 "DO"),
+    (r'\bswitch\b',             "SWITCH"),
+    (r'\bcase\b',               "CASE"),
+    (r'\bdefault\b',            "DEFAULT"),
     (r'\bbreak\b',              "BREAK"),
     (r'\bcontinue\b',           "CONTINUE"),
     (r'\bfalse\b',              "FALSE"),
-    (r'\bfrue\b',               "TRUE"),
+    (r'\btrue\b',               "TRUE"),
     (r'\bNone\b',               "NONE"),
     (r'\bin\b',                 "IN"),
     (r'\bclass\b',              "CLASS"),
@@ -73,49 +77,46 @@ tokenData = [
     (r'\bvar\b',                "TYPE"),
     (r'\blet\b',                "TYPE"),
     (r'\bconst\b',              "TYPE"),
-    (r'\bfuntion\b',            "FUNCTION"),
+    (r'\btry\b',                "TRY"),
+    (r'\bcatch\b',              "CATCH"),
+    (r'\bthrow\b',              "THROW"),
+    (r'\bfinally\b',            "FINALLY"),
+    (r'\berr\b',                "ERR"),
+    (r'\bdelete\b',             "DELETE"),
+    (r'\bfunction\b',           "FUNCTION"),
+    (r'\bconstructor\b',        "CONSTRUCTOR"),
+    (r'\bthis\b',               "THIS"),
     (r'\,',                     "COMMA"),
-    (r'[A-Za-z_][A-Za-z0-9_]*', "NAME"),
+    (r'[A-Za-z_][A-Za-z0-9_]*', "ID"),
     (r'\w+[.]\w+',              "KARTITIK"),
     (r'\.',                     "TITIK"),
     (r'\'\'\'[(?!(\'\'\'))\w\W]*\'\'\'',       "MULTILINE"),
     (r'\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"',       "MULTILINE"),
 ]
 
-# teks ke token
-newA = r'[\n]+[ \t]*\'\'\'[(?!(\'\'\'))\w\W]*\'\'\''
-newB = r'[\n]+[ \t]*\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"'
-
-def lexer(teks, token_exp):
-    pos = 0 # posisi karakter pada seluruh potongan teks (absolut)
+def lexer(stringInput, token_exp):
+    pos = 0 # posisi karakter pada seluruh potongan stringInput (absolut)
     cur = 1 # posisi karakter relatif terhadap baris tempat dia berada
     line = 1 # posisi baris saat ini
     tokens = []
-    while pos < len(teks):
-        if teks[pos] == '\n':
+    while pos < len(stringInput):
+        if stringInput[pos] == '\n':
             cur = 1
             line += 1
         match = None
 
         for t in token_exp:
             pattern, tag = t
-            # if line == 1:
-            #     if pattern == newA:
-            #         pattern = r'[^\w]*[ \t]*\'\'\'[(?!(\'\'\'))\w\W]*\'\'\''
-            #     elif pattern == newB:
-            #         pattern = r'[^\w]*[ \t]*\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"'
             regex = re.compile(pattern)
-            match = regex.match(teks, pos)
-            if match:
+            isMatch = regex.match(stringInput, pos)
+            if isMatch:
                 if tag:
                     token = tag
                     tokens.append(token)
                 break
 
-        if not match:
+        if not isMatch:
             print("ILLEGAL CHARACTER")
-            print("SYNTAX ERROR")
-            sys.exit(1)
         else:
             pos = match.end(0)
         cur += 1
@@ -128,9 +129,6 @@ def create_token(sentence):
 
     print(char)
 
-    tokens = lexer(char,tokenData)
+    tokens = " ".join(lexer(char,tokenData))
 
-    return " ".join(tokens)
-
-x = create_token('C:/Users/HP/Documents/Koding/TBFO01-IP5/src/test.js')
-print(x)
+    return tokens
