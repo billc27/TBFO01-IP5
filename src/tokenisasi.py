@@ -1,8 +1,11 @@
+import re
+
 tokenData = [
-    # None
     (r'[ \t]+',                                      None),
     (r'\/\/[^\n]*',                                  None),
     (r'\/\*[^*/]*\*\/',                              None),
+    (r'[\n]+[ \t]*\'\'\'[(?!(\'\'\'))\w\W]*\'\'\'',  None),
+    (r'[\n]+[ \t]*\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"',  None),
 
     # Number and String
     (r'\"[^\"\n]*\"',           "STRING"),
@@ -11,7 +14,7 @@ tokenData = [
     (r'[\+\-]?[1-9][0-9]+',     "NUM"),
     (r'[\+\-]?[0-9]',           "NUM"),
 
-    # Uniq char
+    # Delimiter
     (r'\n',                     "NEWLINE"),
     (r'\(',                     "LRB"), 
     (r'\)',                     "RRB"),
@@ -21,9 +24,6 @@ tokenData = [
     (r'\}',                     "RCB"),
     (r'\;',                     "SEMICOLON"), 
     (r'\:',                     "COLON"),
-    (r'\,',                     "COMMA"),
-    (r'\w+[.]\w+',              "KARTITIK"),
-    (r'\.',                     "TITIK"),
 
     # Operator
     (r'\*\*=',                  "POWEQ"),
@@ -45,18 +45,12 @@ tokenData = [
     (r'<',                      "L"),
     (r'>=',                     "GEQ"),
     (r'>',                      "G"),
-    (r'!==',                     "NEQEQ"),
     (r'!(?!\=)(?!\=)',                     "NOT"),
     (r'\!=(?!\=)',                     "NEQ"),
     (r'\!\==',                     "NEQEQ"),
-    (r'!',                      "NOT"),
-    (r'\===',                    "ISEQEQ"),
     (r'\==(?!\=)',                    "ISEQ"),
     (r'\=\==',                    "ISEQEQ"),
-    (r'(?!\!)\=(?!\=)',                     "EQ"),
-    (r'\|\|',               "OR"),
-    (r'!',                  "NOT"),
-    (r'&&',                 "AND"),
+    (r'(?!\!)\=(?!\=)(?!\=)',               "EQ"),
 
     # Keyword
     (r'\bformat\b',             "FORMAT"),
@@ -65,8 +59,8 @@ tokenData = [
     (r'\|\|',               "OR"),
     (r'\|(?!\|)',                 "ORBIT"),
     (r'\b!\b',                  "NOT"),
-    (r'\~',                     "NOTBIT"),
-    (r'\^',                     "XORBIT"),
+    (r'\~',                 "NOTBIT"),
+    (r'\^',                 "XORBIT"),
     (r'\bif\b',                 "IF"),
     (r'\belse\b',               "ELSE"),
     (r'\bfor\b',                "FOR"),
@@ -80,7 +74,13 @@ tokenData = [
     (r'\bfalse\b',              "FALSE"),
     (r'\btrue\b',               "TRUE"),
     (r'\bNone\b',               "NONE"),
+    (r'\bin\b',                 "IN"),
+    (r'\bclass\b',              "CLASS"),
     (r'\breturn\b',             "RETURN"),
+    (r'\bimport\b',             "IMPORT"),
+    (r'\braise\b',              "RAISE"),
+    (r'\bwith\b',               "WITH"),
+    (r'\bas\b',                 "AS"),
     (r'\bvar\b',                "TYPE"),
     (r'\blet\b',                "TYPE"),
     (r'\bconst\b',              "TYPE"),
@@ -92,5 +92,52 @@ tokenData = [
     (r'\bdelete\b',             "DELETE"),
     (r'\bfunction\b',           "FUNCTION"),
     (r'\bconstructor\b',        "CONSTRUCTOR"),
+    (r'\bthis\b',               "THIS"),
+    (r'\,',                     "COMMA"),
     (r'[A-Za-z_][A-Za-z0-9_]*', "ID"),
+    (r'\w+[.]\w+',              "KARTITIK"),
+    (r'\.',                     "TITIK"),
+    (r'\'\'\'[(?!(\'\'\'))\w\W]*\'\'\'',       "MULTILINE"),
+    (r'\"\"\"[(?!(\"\"\"))\w\W]*\"\"\"',       "MULTILINE"),
 ]
+
+def lexer(stringInput, token_exp):
+    pos = 0
+    cur = 1 # character position relative to row
+    line = 1 # current row position
+    tokens = []
+    while pos < len(stringInput):
+        if stringInput[pos] == '\n':
+            cur = 1
+            line += 1
+        match = None
+
+        for t in token_exp:
+            pattern, tag = t
+            regex = re.compile(pattern)
+            match = regex.match(stringInput, pos)
+            if match:
+                if tag:
+                    token = tag
+                    tokens.append(token)
+                break
+
+        pos = match.end(0)
+        cur += 1
+    return tokens
+
+def create_token(sentence):
+    file = open(sentence)
+    char = file.read()
+    file.close()
+
+    print(char)
+
+    tokens = " ".join(lexer(char,tokenData))
+
+    if len(tokens) != 0:
+        tokens += ' '
+    tokens += 'EOF'
+
+    print(tokens)
+    return tokens
