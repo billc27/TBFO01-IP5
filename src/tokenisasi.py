@@ -114,11 +114,8 @@ def lexer(stringInput, token_exp):
                     token = tag
                     tokens.append(token)
                 break
-
-        if not isMatch:
-            print("ILLEGAL CHARACTER")
-        else:
-            pos = match.end(0)
+            
+        pos = match.end(0)
         cur += 1
     return tokens
 
