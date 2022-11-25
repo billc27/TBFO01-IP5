@@ -27,7 +27,7 @@ def read_grammar(nama_file):
     
     return cfg
 
-def is_terminal(string):
+def isTerminal(string):
     list_of_terminal = [
         "STRING",
         "NUM",
@@ -58,9 +58,15 @@ def is_terminal(string):
         "GEQ",
         "G",
         "NEQ",
+        "NEQEQ",
         "ISEQ",
+        "ISEQEQ",
         "EQ",
         "FORMAT",
+        "ANDBIT",
+        "ORBIT",
+        "NOTBIT",
+        "XORBIT",
         "AND",
         "OR",
         "NOT",
@@ -99,10 +105,11 @@ def is_terminal(string):
         "COMMA",
         "THIS",
         "CONSTRUCTOR",
+        "EOF"
     ]
     return string in list_of_terminal
 
-def is_variables(string):
-    return not is_terminal(string)
+def isNonTerminal(string):
+    return not isTerminal(string)
 
 # read_grammar("CFG.txt")
