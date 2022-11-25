@@ -4,13 +4,12 @@ def read_grammar(nama_file):
     file = open(nama_file, "r")
     cfg = {}
 
-    baris = file.readline()
-    while baris != "":
-        if (baris.startswith('##')):    # ignore comments
+    line = file.readline()
+    while line != "":
+        if (line.startswith('##')):    # ignore comments
             pass
         else:
-            # head, body = baris.replace("\n", "").split(" -> ")
-            head, *tail = baris.replace("\n", "").split(" -> ")
+            head, *tail = line.replace("\n", "").split(" -> ")
 
             if(len(tail) != 0):
                 body = tail[0]
@@ -19,7 +18,7 @@ def read_grammar(nama_file):
                 else:
                     cfg[head].append(body.split(" "))
 
-        baris = file.readline()
+        line = file.readline()
 
     file.close()
 
