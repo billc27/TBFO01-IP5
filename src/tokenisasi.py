@@ -55,8 +55,12 @@ tokenData = [
     # Keyword
     (r'\bformat\b',             "FORMAT"),
     (r'&&',                 "AND"),
+    (r'\&(?!\&)',                 "AND"),
     (r'\|\|',               "OR"),
+    (r'\|(?!\|)',                 "AND"),
     (r'\b!\b',                  "NOT"),
+    (r'\~',                 "NOTBIT"),
+    (r'\^',                 "XORBIT"),
     (r'\bif\b',                 "IF"),
     (r'\belse\b',               "ELSE"),
     (r'\bfor\b',                "FOR"),

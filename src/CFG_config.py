@@ -59,9 +59,15 @@ def isTerminal(string):
         "GEQ",
         "G",
         "NEQ",
+        "NEQEQ",
         "ISEQ",
+        "ISEQEQ",
         "EQ",
         "FORMAT",
+        "ANDBIT",
+        "ORBIT",
+        "NOTBIT",
+        "XORBIT",
         "AND",
         "OR",
         "NOT",
@@ -100,6 +106,7 @@ def isTerminal(string):
         "COMMA",
         "THIS",
         "CONSTRUCTOR",
+        "EOF"
     ]
     return string in list_of_terminal
 
